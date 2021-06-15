@@ -1,6 +1,7 @@
 
 import numpy as np
 from distutils.core import setup
+from Cython.Build import cythonize
 
 DISTNAME = 'rootcp'
 DESCRIPTION = 'Root-finding approaches for computing conformal prediction set'
@@ -22,5 +23,6 @@ setup(name='rootcp',
       url=URL,
       download_url=DOWNLOAD_URL,
       packages=['rootcp'],
+      ext_modules=cythonize("bisection/bisect.pyx"),
       include_dirs=[np.get_include()]
       )

@@ -5,7 +5,7 @@ class ridge:
     """ Ridge estimator.
     """
 
-    def __init__(self, lmd=0.):
+    def __init__(self, lmd=0.1):
 
         self.lmd = lmd
         self.hat = None
@@ -23,10 +23,54 @@ class ridge:
 
         self.beta = self.hatn + y[-1] * self.hat[:, -1]
 
-    def predict(self, x):
+    def predict(self, X):
 
-        return x.dot(self.beta)
+        return X.dot(self.beta)
 
-    def conformity(self, y, hat_y):
+    def conformity(self, y, y_pred):
 
-        return 0.5 * np.square(y - hat_y)
+        return 0.5 * np.square(y - y_pred)
+
+
+class regressor:
+
+    def __init__(self, model=None, s_eps=0., conform=None):
+
+        self.model = model
+        self.coefs = []
+        self.s_eps = s_eps
+        self.conform = conform
+
+    def fit(self, X, y):
+
+        refit = True
+
+        for t in range(len(self.coefs)):
+
+            if self.s_eps == 0:
+                break
+
+            if abs(self.coefs[t][0] - y[-1]) <= self.s_eps:
+                self.beta = self.coefs[t][1].copy()
+                refit = False
+                break
+
+        if refit:
+            self.beta = self.model.fit(X, y)
+            if self.s_eps != 0:
+                self.coefs += [[y[-1], self.beta.copy()]]
+
+    def predict(self, X):
+
+        if len(X.shape) == 1:
+            X = X.reshape(1, -1)
+
+        return self.model.predict(X)
+
+    def conformity(self, y, y_pred):
+
+        if self.conform is None:
+            return np.abs(y - y_pred)
+
+        else:
+            return self.conform(y, y_pred)
