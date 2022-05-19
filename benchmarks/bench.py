@@ -17,8 +17,8 @@ run_bench = True
 save_bench = True
 
 run_plot_bench = True
-show_bench = True
-save_figure = False
+show_bench = False
+save_figure = True
 
 
 # The results will be averaged over n_repet randomized repetitions
@@ -135,8 +135,9 @@ CPs = {"oracleCP": oracleCP,
        }
 
 CP_colors = ["#0E0E0E", "#117733", "#882255", "#DDCC77", "k", "r"]
-datasets = ["boston", "diabetes", "housingcalifornia", "friedman1"]
-methods = ["ridge", "Lasso", "OMP", "RandomForest", "MLP", "GradientBoosting"]
+# datasets = ["boston", "diabetes", "housingcalifornia", "friedman1"]
+datasets = ["diabetes"]
+methods = ["GLM_lasso"]
 
 
 if run_bench:

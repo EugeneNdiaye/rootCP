@@ -4,10 +4,10 @@ from distutils.core import setup
 from Cython.Build import cythonize
 
 DISTNAME = 'rootcp'
-DESCRIPTION = 'Root-finding approaches for computing conformal prediction set'
+DESCRIPTION = '...'
 LONG_DESCRIPTION = open('README.md').read()
-MAINTAINER = 'Eugene Ndiaye'
-MAINTAINER_EMAIL = 'ndiayeeugene@gmail.com'
+MAINTAINER = '...'
+MAINTAINER_EMAIL = '...'
 LICENSE = 'BSD (3-clause)'
 DOWNLOAD_URL = '...'
 URL = '...'
@@ -23,6 +23,6 @@ setup(name='rootcp',
       url=URL,
       download_url=DOWNLOAD_URL,
       packages=['rootcp'],
-      ext_modules=cythonize("bisection/bisect.pyx"),
+      # ext_modules=cythonize("bisection/bisect.pyx"),
       include_dirs=[np.get_include()]
       )
