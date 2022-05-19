@@ -1,6 +1,28 @@
 import numpy as np
 
 
+
+class warmirror:
+    """ Ridge estimator.
+    """
+
+    def __init__(self, lmd=0.1):
+
+        self.lmd = lmd
+
+    def fit(self, X, y):
+
+        self.beta = put the beta corresponding to z=y[-1]
+
+    def predict(self, X):
+
+        return X.dot(self.beta)
+
+    def conformity(self, y, y_pred):
+
+        return 0.5 * np.square(y - y_pred)
+
+
 class ridge:
     """ Ridge estimator.
     """
