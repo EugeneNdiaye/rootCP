@@ -135,8 +135,9 @@ CPs = {"oracleCP": oracleCP,
        }
 
 CP_colors = ["#0E0E0E", "#117733", "#882255", "#DDCC77", "k", "r"]
-datasets = ["boston", "diabetes", "housingcalifornia", "friedman1"]
-methods = ["ridge", "Lasso", "OMP", "RandomForest", "MLP", "GradientBoosting"]
+# datasets = ["boston", "diabetes", "housingcalifornia", "friedman1"]
+datasets = ["diabetes"]
+methods = ["GLM_lasso"]
 
 
 if run_bench:
