@@ -3,17 +3,6 @@ from cp_tool import cpregressor
 import numpy as np
 from generalized_z_path import FenCon, lasso_loss, lasso_gradient, inv_lasso_gradient, assymetric_loss, assymetric_grad, inv_assymetric_grad, robust_loss, robust_grad, inv_robust_grad
 
-class lassocpregressor(cpregressor):
-	def __init__(self, lmd):
-		super().__init__(lasso_loss, lasso_gradient, inv_lasso_gradient, lmd)
-
-class robustcpregressor(cpregressor):
-	def __init__(self, lmd):
-		super().__init__(robust_loss, robust_grad, inv_robust_grad, lmd)
-
-class asymetriccpregressor(cpregressor):
-	def __init__(self, lmd):
-		super().__init__(assymetric_loss, assymetric_grad, inv_assymetric_grad, lmd)	
 
 class cpregressor():
 	def __init__(self, loss, grad, invgradf, lmd):
@@ -21,19 +10,21 @@ class cpregressor():
 		self.loss = loss
 		self.grad = grad
 		self.lmd = lmd
+		self.betas = None
 
 	def fit(self, X, y):
 		m = FenCon(self.loss, self.grad, self.invgradf)
-		betas, cands = m.solve(X, y[:-1])
 
+		if self.betas is None:
+			self.betas, self.cands = m.solve(X, y)
 
 		z = y[-1]
-		if z > cands[0]:
+		if z > self.cands[0]:
 			currb = betas[0] 
-		elif z < cands[-1]:
+		elif z < self.cands[-1]:
 			currb = betas[-1]
 		else:
-			for idx, cand in enumerate(cands):
+			for idx, cand in enumerate(self.cands):
 				
 				if cand > z:
 					currb = betas[idx]
@@ -129,3 +120,16 @@ class regressor:
 
 		else:
 			return self.conform(y, y_pred)
+
+class lassocpregressor(cpregressor):
+	def __init__(self, lmd):
+		super(cpregressor, self).__init__(lasso_loss, lasso_gradient, inv_lasso_gradient, lmd)
+
+class robustcpregressor(cpregressor):
+	def __init__(self, lmd):
+		super().__init__(robust_loss, robust_grad, inv_robust_grad, lmd)
+
+class asymetriccpregressor(cpregressor):
+	def __init__(self, lmd):
+		super().__init__(assymetric_loss, assymetric_grad, inv_assymetric_grad, lmd)	
+
