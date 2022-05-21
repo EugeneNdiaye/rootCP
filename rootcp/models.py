@@ -1,50 +1,4 @@
-from generalized_z_path import assymetric_grad, assymetric_loss, inv_assymetric_grad, inv_robust_grad
-from cp_tool import cpregressor
 import numpy as np
-from generalized_z_path import FenCon, lasso_loss, lasso_gradient, inv_lasso_gradient, assymetric_loss, assymetric_grad, inv_assymetric_grad, robust_loss, robust_grad, inv_robust_grad
-
-
-class cpregressor():
-	def __init__(self, loss, grad, invgradf, lmd):
-		self.invgradf = invgradf
-		self.loss = loss
-		self.grad = grad
-		self.lmd = lmd
-		self.betas = None
-
-	def fit(self, X, y):
-		m = FenCon(self.loss, self.grad, self.invgradf)
-
-		if self.betas is None:
-			self.betas, self.cands = m.solve(X, y)
-
-		z = y[-1]
-		if z > self.cands[0]:
-			currb = betas[0] 
-		elif z < self.cands[-1]:
-			currb = betas[-1]
-		else:
-			for idx, cand in enumerate(self.cands):
-				
-				if cand > z:
-					currb = betas[idx]
-					break
-	
-		
-		self.aset = np.argwhere(currb != 0)
-		pseudo_temp = np.linalg.pinv(X[:, self.aset] @ X[:, self.aset].T)
-		Pi_A = (pseudo_temp @ X[:, self.aset]).dot(self.eta[self.aset])
-		Pi_At = np.linalg.solve(X[:, self.aset].T @ X[:, self.aset], X[:, self.aset].T)
-		v_a = np.sign(currb)
-
-		self.beta = Pi_A @ self.invgradf(-self.lmd * Pi_At * v_a)
-
-	def predict(self, X):
-		return X.dot(self.beta)
-		
-	def conformity(self, y, y_pred):
-		return 0.5 * np.square(y - y_pred)
-
 
 
 class ridge:
@@ -120,16 +74,3 @@ class regressor:
 
 		else:
 			return self.conform(y, y_pred)
-
-class lassocpregressor(cpregressor):
-	def __init__(self, lmd):
-		super(cpregressor, self).__init__(lasso_loss, lasso_gradient, inv_lasso_gradient, lmd)
-
-class robustcpregressor(cpregressor):
-	def __init__(self, lmd):
-		super().__init__(robust_loss, robust_grad, inv_robust_grad, lmd)
-
-class asymetriccpregressor(cpregressor):
-	def __init__(self, lmd):
-		super().__init__(assymetric_loss, assymetric_grad, inv_assymetric_grad, lmd)	
-

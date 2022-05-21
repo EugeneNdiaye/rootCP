@@ -234,9 +234,4 @@ def load_model(method="ridge", X=None, y=None):
         lmd = 0.1
         model = models.ridge(lmd=lmd)
 
-    if method == "GLM_lasso":
-        lmd=0.1
-        model = models.robustcpregressor(lmd=lmd)
-
-
     return models.regressor(model=model)
